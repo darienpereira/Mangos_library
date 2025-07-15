@@ -5,10 +5,10 @@ import (
 )
 
 type User struct {
-	ID uuid.UUID
-	Name string
-	Email string
+	ID       uuid.UUID
+	Name     string
+	Email    string
 	Password string
-	Books []Book
-	
+	Books    []Book
+	Role     string
 }

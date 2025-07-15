@@ -6,8 +6,3 @@ type UserHandler struct {
 	Service *services.UserService
 }
 
-/*
-register user
-login user
-user info
-*/
