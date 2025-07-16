@@ -62,9 +62,9 @@ func (s *UserService) Login(req *models.User) (string, error) {
 
 func (s *UserService) GetUserInfo(claims jwt.MapClaims) (*models.User, error) {
 	id := claims["userID"].(string)
-	user, err := s.Repo.GetUserInfo(id)
+	user, err := s.Repo.GetUserById(id)
 	if err != nil {
 		return &models.User{}, err
 	}
-	return &user, nil
+	return user, nil
 }
