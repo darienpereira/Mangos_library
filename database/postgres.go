@@ -13,7 +13,7 @@ import (
 
 var Db *gorm.DB
 
-func OpenDb() {
+func OpenDb() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("failed to load .env file", err)
@@ -44,4 +44,5 @@ func OpenDb() {
 	}
 
 	fmt.Println("connected to database successfully")
+	return Db
 }
