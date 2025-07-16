@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"library/middleware"
 	"library/models"
 	"library/repository"
@@ -15,9 +16,12 @@ type UserService struct {
 
 func (s *UserService) RegisterUser(req *models.User) error {
 	// check if user exists in db
-	_, err := s.Repo.GetUserByEmail(req.Email)
-	if err == nil {
+	user, err := s.Repo.GetUserByEmail(req.Email)
+	if err != nil {
 		return err
+	}
+	if user != nil {
+		return errors.New("user already exists")
 	}
 
 	// hash the password
