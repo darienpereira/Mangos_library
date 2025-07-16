@@ -9,7 +9,6 @@ type User struct {
 	Name     string    `json:"name"`
 	Email    string    `json:"email" gorm:"unique"`
 	Password string    `json:"password"`
-	Books    []Book    `json:"posts" gorm:"foreignKey:UserID"`
+	Books    []Book    `json:"books" gorm:"foreignKey:UserID"`
 	Role     string    `json:"role"`
 }
-

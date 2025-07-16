@@ -7,12 +7,17 @@ import (
 	"log"
 	"net/http"
 
-	
+	"library/utils"
+	"net/http"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/mux"
 )
 
 type BookHandler struct {
 	Service *services.BookService
 }
+
 
 func (b BookHandler) CreateBook (w http.ResponseWriter, r *http.Request) { //method receiver 
     var book models.Book
@@ -20,6 +25,7 @@ func (b BookHandler) CreateBook (w http.ResponseWriter, r *http.Request) { //met
         http.Error(w, "Invalid input", http.StatusBadRequest)
         return
     }
+  
 	err:= b.Service.CreateBook(book) //service layer
     if err != nil {
 		log.Println(err)
@@ -65,17 +71,46 @@ func (b BookHandler) DeleteBook(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode("book successfully deleted")
 }
 
+func (h *BookHandler) ListUserBooks(w http.ResponseWriter, r *http.Request) {
+	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
+	if !ok {
+		http.Error(w, "no user id in context", http.StatusInternalServerError)
+		return
+	}
+	var myBooks []models.Book
+	err := h.Service.ListBookByUserID(&myBooks, claims)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(myBooks)
+}
 
+func (h *BookHandler) BorrowBook(w http.ResponseWriter, r *http.Request) {
+	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
+	if !ok {
+		http.Error(w, "no user id in context", http.StatusInternalServerError)
+		return
+	}
+	v := mux.Vars(r)
+	bookID := v["id"]
 
+	err := h.Service.BorrowBook(bookID, claims)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-
+	w.WriteHeader(http.StatusOK)
+}
 
 /*
 Group 1
 list All Books - user
 get Book By ID - user
-list My Books - user
+list My Books - user           Done
 chechout book - user
 check in book - user
 
