@@ -1,6 +1,10 @@
 package utils
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"os"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 type contextKey string
 
@@ -20,4 +24,12 @@ func ComparePassword(hashPassword, plainPassword string) error {
 		return err
 	}
 	return nil
+}
+
+func GetPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		return "8080"
+	}
+	return port
 }
