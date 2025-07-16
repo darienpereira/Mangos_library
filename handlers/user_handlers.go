@@ -5,7 +5,10 @@ import (
 
 	"library/models"
 	"library/services"
+	"library/utils"
 	"net/http"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type UserHandler struct {
@@ -59,3 +62,19 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
+	claims,ok:=r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
+	if	!ok {
+		http.Error(w, "unable to get claim", http.StatusInternalServerError)
+		return
+	}
+	user, err := h.Service.GetUserInfo(claims)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	//response
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(user)
+}
