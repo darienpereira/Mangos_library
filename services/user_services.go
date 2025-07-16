@@ -69,3 +69,4 @@ func (s *UserService) GetUserInfo(claims jwt.MapClaims) (*models.User, error) {
 	}
 	return user, nil
 }
+

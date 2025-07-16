@@ -14,6 +14,19 @@ type BookService struct {
 	Repo repository.BookRepository
 }
 
+
+func(b BookService) CreateBook(book models.Book) error{
+	return b.Repo.CreateBook(&book)
+}
+
+func (b BookService) UpdateBook(book models.Book) error {
+    return b.Repo.UpdateBook(&book)
+}
+
+func (b BookService) DeleteBook(book models.Book) error {
+    return b.Repo.DeleteBook(book.ID)
+}
+
 func (s *BookService) ListBookByUserID(books *[]models.Book, claims jwt.MapClaims) error{
 	userId, ok := claims["userID"].(string)
 	if !ok {
@@ -49,3 +62,4 @@ func (s *BookService) BorrowBook(bookID string, claims jwt.MapClaims) error {
 	
 	return nil
 }
+

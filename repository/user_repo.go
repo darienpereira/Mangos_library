@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"gorm.io/gorm"
 	"library/database"
 	"library/models"
 )
@@ -10,11 +11,14 @@ type UserRepository interface {
 	CreateUser(user *models.User) error
 	GetUserById(ID string) (*models.User, error)
 
+type UserRepository interface {
+	CreateBook(book models.Book) error
 }
 
 type UserRepo struct {
-	
+	Db *gorm.DB
 }
+
 
 func (r *UserRepo) GetUserByEmail (email string) (*models.User, error) {
 	// check if user exists in db
@@ -34,3 +38,4 @@ func (r *UserRepo) GetUserById(ID string) (*models.User, error) {
     err := database.Db.Preload("books").Where("id= ?", ID).First(&user).Error
         return &user, err
 }
+
