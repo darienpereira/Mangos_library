@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	GetUserByEmail(email string) (*models.User, error)
 	CreateUser(user *models.User) error
+	GetUserById(ID string) (*models.User, error)
 
 }
 
@@ -33,4 +34,11 @@ func (r *UserRepo) CreateUser(user *models.User) error {
 		return err
 	}
 	return nil
+}
+
+func (r *UserRepo) GetUserById(ID string) (*models.User, error) {
+    var user models.User
+
+    err := database.Db.Preload("books").Where("id= ?", ID).First(&user).Error
+        return &user, err
 }
