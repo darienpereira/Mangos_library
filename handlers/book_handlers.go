@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/mux"
 )
 
 type BookHandler struct {
@@ -29,6 +30,24 @@ func (h *BookHandler) ListUserBooks(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(myBooks)
+}
+
+func (h *BookHandler) BorrowBook(w http.ResponseWriter, r *http.Request) {
+	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
+	if !ok {
+		http.Error(w, "no user id in context", http.StatusInternalServerError)
+		return
+	}
+	v := mux.Vars(r)
+	bookID := v["id"]
+
+	err := h.Service.BorrowBook(bookID, claims)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 /*
