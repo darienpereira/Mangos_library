@@ -7,7 +7,6 @@ import (
 	"library/utils"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -29,10 +28,8 @@ func (s *UserService) RegisterUser(req *models.User) error {
 
 	req.Password = HashPassword
 
-	req.ID = uuid.New()
-
 	// add user into db
-	s.Repo.CreateUser(req)
+	err = s.Repo.CreateUser(req)
 	if err != nil {
 		return err
 	}

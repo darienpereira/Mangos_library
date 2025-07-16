@@ -19,21 +19,13 @@ type UserRepo struct {
 func (r *UserRepo) GetUserByEmail (email string) (*models.User, error) {
 	// check if user exists in db
 	var user models.User
-	err := database.Db.Where("email = ?", email).First(&user).Error
-	if err == nil {
-		return &models.User{}, err
-}
-
-return &user, nil
-
+	err := database.Db.Where("Email = ?", email).First(&user).Error
+	return &user, err
 }
 
 func (r *UserRepo) CreateUser(user *models.User) error {
 	err := database.Db.Create(&user).Error
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (r *UserRepo) GetUserById(ID string) (*models.User, error) {

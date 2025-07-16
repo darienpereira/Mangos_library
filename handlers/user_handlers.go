@@ -24,22 +24,23 @@ user info
 // register handler
 func (h *UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// collect request details
-	var signUp models.User
-	err := json.NewDecoder(r.Body).Decode(&signUp)
+	var newUser models.User
+	err := json.NewDecoder(r.Body).Decode(&newUser)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// call service layer
-	err = h.Service.RegisterUser(&signUp)
+	err = h.Service.RegisterUser(&newUser)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	// response
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(signUp)
+	json.NewEncoder(w).Encode(newUser)
 }
 
 // login handler
@@ -55,6 +56,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	token, err := h.Service.Login(&login)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
