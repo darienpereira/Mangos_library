@@ -19,7 +19,7 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 	p.Use(middleware.AuthMiddleware)
 
 	/* user routes */
-
+	p.HandleFunc("/mybooks", bookHandler.ListUserBooks).Methods("GET")
 
 	/* admin routes */
 
