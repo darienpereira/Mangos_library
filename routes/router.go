@@ -30,6 +30,7 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 	a := r.PathPrefix("/").Subrouter()
 	a.Use(middleware.AuthAdmin)
 	a.HandleFunc("/books", bookHandler.CreateBook).Methods("POST")
+	a.HandleFunc("/books/{id}", bookHandler.UpdateBook).Methods("PUT")
 
 	return r
 }
