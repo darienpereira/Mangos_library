@@ -81,3 +81,12 @@ func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+
+
+
+
+
+
+
+
+

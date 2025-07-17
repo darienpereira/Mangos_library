@@ -8,16 +8,22 @@ import (
 	"library/utils"
 
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
 	Repo repository.UserRepository
 }
 
+func (s *UserService) GetUserByID(userIDStr string) (any, any) {
+	panic("unimplemented")
+}
+
 func (s *UserService) RegisterUser(req *models.User) error {
 	// check if user exists in db
 	user, err := s.Repo.GetUserByEmail(req.Email)
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		// It's a real DB error, not just "not found"
 		return err
 	}
 	if user != nil {
@@ -54,7 +60,7 @@ func (s *UserService) Login(req *models.User) (string, error) {
 	}
 
 	//generate token
-	token, err := middleware.GenerateJWT(user.ID)
+	token, err := middleware.GenerateJWT(user.ID, user.Role)
 	if err != nil {
 		return "", err
 	}
@@ -69,4 +75,3 @@ func (s *UserService) GetUserInfo(claims jwt.MapClaims) (*models.User, error) {
 	}
 	return user, nil
 }
-
