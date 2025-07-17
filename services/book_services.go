@@ -20,7 +20,7 @@ func (b *BookService) FindByAuthor(pattern string) (any, any) {
 
 func (b BookService) CreateBook(book models.Book, claims jwt.MapClaims) error {
 	role := claims["role"].(string)
-	if role != "Admin" {
+	if role != "admin" {
 		return errors.New("unauthorised")
 	}
 	book.OnShelf = true
