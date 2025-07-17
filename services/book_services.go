@@ -67,7 +67,7 @@ func (s *BookService) BorrowBook(bookID string, claims jwt.MapClaims) error {
 	returnDate := time.Now().Add(24 * time.Hour)
 	book.ReturnDate = &returnDate
 	book.UserID = &userID
-	err = s.Repo.UpdateBook(book)
+	err = s.Repo.UpdateBookStock(book)
 	if err != nil {
 		return err
 	}
@@ -84,13 +84,13 @@ func (s *BookService) ReturnBook(bookID string, claims jwt.MapClaims) error {
 	if err != nil {
 		return err
 	}
-	if book.UserID != &userID {
-		return errors.New("book belongs to someone else")
+	if book.UserID == nil || *book.UserID != userID {
+		return errors.New("book does not belong to you")
 	}
 	book.OnShelf = true
 	book.ReturnDate = nil
 	book.UserID = nil
-	err = s.Repo.UpdateBook(book)
+	err = s.Repo.UpdateBookStock(book)
 	if err != nil {
 		return err
 	}

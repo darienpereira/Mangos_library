@@ -26,6 +26,9 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 	p.HandleFunc("/search/author", bookHandler.FindByAuthor).Methods("POST")
 	p.HandleFunc("/search/year", bookHandler.FindByYear).Methods("POST")
 
+	p.HandleFunc("/borrow/{id}", bookHandler.BorrowBook).Methods("PUT")
+	p.HandleFunc("/return/{id}", bookHandler.ReturnBook).Methods("PUT")
+
 	/* admin routes */
 	a := r.PathPrefix("/").Subrouter()
 	a.Use(middleware.AuthAdmin)
