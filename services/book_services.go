@@ -34,8 +34,9 @@ func (s *BookService) UpdateBook(req models.Book, id string) error {
 	return s.Repo.UpdateBook(book)
 }
 
-func (b BookService) DeleteBook(book models.Book) error {
-	return b.Repo.DeleteBook(book.ID)
+func (s *BookService) DeleteBook(id string) error {
+	
+	return s.Repo.DeleteBook(id)
 }
 
 func (s *BookService) ListBookByUserID(books *[]models.Book, claims jwt.MapClaims) error {

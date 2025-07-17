@@ -31,6 +31,7 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 	a.Use(middleware.AuthAdmin)
 	a.HandleFunc("/books", bookHandler.CreateBook).Methods("POST")
 	a.HandleFunc("/books/{id}", bookHandler.UpdateBook).Methods("PUT")
+	a.HandleFunc("/books/{id}", bookHandler.DeleteBook).Methods("DELETE")
 
 	return r
 }

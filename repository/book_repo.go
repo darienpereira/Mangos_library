@@ -3,8 +3,6 @@ package repository
 import (
 	"library/database"
 	"library/models"
-
-	"github.com/google/uuid"
 )
 
 type BookRepository interface {
@@ -12,7 +10,7 @@ type BookRepository interface {
 	GetBookByID(id string) (*models.Book, error)
 	UpdateBook(update *models.Book) error
 	CreateBook(book *models.Book) error
-    DeleteBook(id uuid.UUID) error
+    DeleteBook(id string) error
 	UpdateBookStock(update *models.Book) error
 	FindByYear(pattern string) ([]models.Book, error)
 	FindByAuthor(pattern string) ([]models.Book, error)
@@ -31,7 +29,7 @@ func (r *BookRepo) UpdateBook(book *models.Book) error {
     return database.Db.Model(&models.Book{}).Where("id = ?", book.ID).Updates(book).Error
 }
 
-func (r *BookRepo) DeleteBook(id uuid.UUID) error {
+func (r *BookRepo) DeleteBook(id string) error {
     return database.Db.Delete(&models.Book{}, id).Error
 }
 

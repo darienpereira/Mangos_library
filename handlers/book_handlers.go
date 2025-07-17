@@ -53,23 +53,22 @@ func (b BookHandler) UpdateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("book successfully updated")
 }
 
 func (b BookHandler) DeleteBook(w http.ResponseWriter, r *http.Request) {
-	var book models.Book
+	v := mux.Vars(r)
+	bookID := v["id"]
 
-	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
-		return
-	}
-	err := b.Service.DeleteBook(book)
+	err := b.Service.DeleteBook(bookID)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Failed to delete book", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.WriteHeader(http.StatusNoContent)
 	json.NewEncoder(w).Encode("book successfully deleted")
 }
 
