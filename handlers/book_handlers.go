@@ -205,20 +205,20 @@ chechout book - user
 check in book - user
 
 Group 2
-create book - admin
-delete book - admin
-update book - admin
+create book - admin			Done
+delete book - admin			Done
+update book - admin			Done
 
 
 Group 3
-find book by genre
-find book by author
-find book by year
-find book by title
+find book by genre			Done
+find book by author			Done
+find book by year			Done
+find book by title			Done
 
 
 Group 4
-register user
-login user
-user info
+register user				Done
+login user					Done
+user info					Done
 */

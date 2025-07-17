@@ -21,10 +21,10 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 	p.HandleFunc("/me", userHandler.GetUserInfo).Methods("GET") 
 	p.HandleFunc("/mybooks", bookHandler.ListUserBooks).Methods("GET")
 
-	p.HandleFunc("/search/genre", bookHandler.FindByGenre).Methods("POST")
-	p.HandleFunc("/search/title", bookHandler.FindByTitle).Methods("POST")
-	p.HandleFunc("/search/author", bookHandler.FindByAuthor).Methods("POST")
-	p.HandleFunc("/search/year", bookHandler.FindByYear).Methods("POST")
+	p.HandleFunc("/search/genre", bookHandler.FindByGenre).Methods("GET")
+	p.HandleFunc("/search/title", bookHandler.FindByTitle).Methods("GET")
+	p.HandleFunc("/search/author", bookHandler.FindByAuthor).Methods("GET")
+	p.HandleFunc("/search/year", bookHandler.FindByYear).Methods("GET")
 
 	p.HandleFunc("/borrow/{id}", bookHandler.BorrowBook).Methods("PUT")
 	p.HandleFunc("/return/{id}", bookHandler.ReturnBook).Methods("PUT")
