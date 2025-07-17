@@ -19,6 +19,9 @@ func (b *BookService) FindByAuthor(pattern string) (any, any) {
 }
 
 func (b BookService) CreateBook(book models.Book) error {
+	book.OnShelf = true
+	book.ReturnDate = nil
+	book.UserID = nil
 	return b.Repo.CreateBook(&book)
 }
 
