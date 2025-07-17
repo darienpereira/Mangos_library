@@ -14,7 +14,7 @@ import (
 
 func main() {
 	/* initialise database */
-	db := database.OpenDb()
+	database.OpenDb()
 
 	/* initialise repositories */
 	userRepo := &repository.UserRepo{}

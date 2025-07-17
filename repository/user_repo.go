@@ -10,9 +10,6 @@ type UserRepository interface {
 	GetUserByEmail(email string) (*models.User, error)
 	CreateUser(user *models.User) error
 	GetUserById(ID string) (*models.User, error)
-
-type UserRepository interface {
-	CreateBook(book models.Book) error
 }
 
 type UserRepo struct {
