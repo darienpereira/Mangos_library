@@ -14,10 +14,6 @@ type BookService struct {
 	Repo repository.BookRepository
 }
 
-func (b *BookService) FindByAuthor(pattern string) (any, any) {
-	panic("unimplemented")
-}
-
 func (b BookService) CreateBook(book models.Book) error {
 	book.OnShelf = true
 	book.ReturnDate = nil
@@ -25,8 +21,17 @@ func (b BookService) CreateBook(book models.Book) error {
 	return b.Repo.CreateBook(&book)
 }
 
-func (b BookService) UpdateBook(book models.Book) error {
-	return b.Repo.UpdateBook(&book)
+func (s *BookService) UpdateBook(req models.Book, id string) error {
+	book, err := s.Repo.GetBookByID(id)
+	if err != nil {
+		return err
+	}
+	book.Title = req.Title
+	book.Author = req.Author
+	book.Genre = req.Genre
+	book.Year = req.Year
+	book.Detail = req.Detail
+	return s.Repo.UpdateBook(book)
 }
 
 func (b BookService) DeleteBook(book models.Book) error {
