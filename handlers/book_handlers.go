@@ -128,53 +128,90 @@ func CreatePattern(req string) string {
 }
 
 func (h *BookHandler) FindByGenre(w http.ResponseWriter, r *http.Request) {
-	genre := r.URL.Query().Get("genre")
-	pattern := CreatePattern(genre)
+    var input struct {
+        Genre string `json:"genre"`
+    }
 
-	books, err := h.Service.FindByGenre(pattern)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
 
-	json.NewEncoder(w).Encode(books)
+    pattern := CreatePattern(input.Genre)
+
+    var books []models.Book
+    err := database.DB.Where("genre LIKE ?", pattern).Find(&books).Error
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    json.NewEncoder(w).Encode(books)
 }
 func (h *BookHandler) FindByTitle(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Query().Get("title")
-	pattern := CreatePattern(title)
+    var input struct {
+        Title string `json:"title"`
+    }
 
-	books, err := h.Service.FindByTitle(pattern)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
 
-	json.NewEncoder(w).Encode(books)
+    pattern := CreatePattern(input.Title)
+
+    var books []models.Book
+    err := database.DB.Where("title LIKE ?", pattern).Find(&books).Error
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    json.NewEncoder(w).Encode(books)
 }
 func (h *BookHandler) FindByAuthor(w http.ResponseWriter, r *http.Request) {
-	author := r.URL.Query().Get("author")
-	pattern := CreatePattern(author)
+    var input struct {
+        Author string `json:"author"`
+    }
 
-	books, err := h.Service.FindByAuthor(pattern)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
 
-	json.NewEncoder(w).Encode(books)
+    pattern := CreatePattern(input.Author)
+
+    var books []models.Book
+    err := database.DB.Where("author LIKE ?", pattern).Find(&books).Error
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    json.NewEncoder(w).Encode(books)
 }
 func (h *BookHandler) FindByYear(w http.ResponseWriter, r *http.Request) {
-	year := r.URL.Query().Get("year")
-	pattern := CreatePattern(year)
+    var input struct {
+        Year string `json:"year"`
+    }
 
-	books, err := h.Service.FindByYear(pattern)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
 
-	json.NewEncoder(w).Encode(books)
+    pattern := CreatePattern(input.Year)
+
+    var books []models.Book
+    err := database.DB.Where("year LIKE ?", pattern).Find(&books).Error
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    json.NewEncoder(w).Encode(books)
 }
+
 
 /*
 Group 1
