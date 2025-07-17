@@ -35,10 +35,11 @@ func (b BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := b.Service.CreateBook(book, claims) //service layer
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Failed to create book", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("book successfully created")
 }
 
@@ -49,10 +50,12 @@ func (b BookHandler) UpdateBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
-	err := b.Service.UpdateBook(book) //service layer
+	v := mux.Vars(r)
+	bookID := v["id"]
+	err := b.Service.UpdateBook(book, bookID) //service layer
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Failed to update book", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
