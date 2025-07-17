@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 
 	"golang.org/x/crypto/bcrypt"
@@ -32,4 +33,9 @@ func GetPort() string {
 		return "8080"
 	}
 	return port
+}
+
+func CreatePattern (req string) string {
+	pattern := fmt.Sprintf("%%%s%%", req)
+	return pattern
 }
