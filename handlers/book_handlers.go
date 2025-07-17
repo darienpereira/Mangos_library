@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"library/database"
 	"library/models"
 	"library/services"
 	"log"
@@ -18,14 +19,20 @@ type BookHandler struct {
 	Service *services.BookService
 }
 
-func (b BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) { //method receiver
+func (b BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
 
-	err := b.Service.CreateBook(book) //service layer
+	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
+	if !ok {
+		http.Error(w, "no claims in context", http.StatusInternalServerError)
+		return
+	}
+
+	err := b.Service.CreateBook(book, claims) //service layer
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Failed to create book", http.StatusInternalServerError)
@@ -72,7 +79,7 @@ func (b BookHandler) DeleteBook(w http.ResponseWriter, r *http.Request) {
 func (h *BookHandler) ListUserBooks(w http.ResponseWriter, r *http.Request) {
 	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
 	if !ok {
-		http.Error(w, "no user id in context", http.StatusInternalServerError)
+		http.Error(w, "no claims in context", http.StatusInternalServerError)
 		return
 	}
 	var myBooks []models.Book
@@ -89,7 +96,7 @@ func (h *BookHandler) ListUserBooks(w http.ResponseWriter, r *http.Request) {
 func (h *BookHandler) BorrowBook(w http.ResponseWriter, r *http.Request) {
 	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
 	if !ok {
-		http.Error(w, "no user id in context", http.StatusInternalServerError)
+		http.Error(w, "no claims in context", http.StatusInternalServerError)
 		return
 	}
 	v := mux.Vars(r)
@@ -140,7 +147,7 @@ func (h *BookHandler) FindByGenre(w http.ResponseWriter, r *http.Request) {
     pattern := CreatePattern(input.Genre)
 
     var books []models.Book
-    err := database.DB.Where("genre LIKE ?", pattern).Find(&books).Error
+    err := database.Db.Where("genre LIKE ?", pattern).Find(&books).Error
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -161,7 +168,7 @@ func (h *BookHandler) FindByTitle(w http.ResponseWriter, r *http.Request) {
     pattern := CreatePattern(input.Title)
 
     var books []models.Book
-    err := database.DB.Where("title LIKE ?", pattern).Find(&books).Error
+    err := database.Db.Where("title LIKE ?", pattern).Find(&books).Error
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -182,7 +189,7 @@ func (h *BookHandler) FindByAuthor(w http.ResponseWriter, r *http.Request) {
     pattern := CreatePattern(input.Author)
 
     var books []models.Book
-    err := database.DB.Where("author LIKE ?", pattern).Find(&books).Error
+    err := database.Db.Where("author LIKE ?", pattern).Find(&books).Error
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -203,7 +210,7 @@ func (h *BookHandler) FindByYear(w http.ResponseWriter, r *http.Request) {
     pattern := CreatePattern(input.Year)
 
     var books []models.Book
-    err := database.DB.Where("year LIKE ?", pattern).Find(&books).Error
+    err := database.Db.Where("year LIKE ?", pattern).Find(&books).Error
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
