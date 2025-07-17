@@ -1,9 +1,11 @@
 package repository
 
 import (
-	"gorm.io/gorm"
+	"errors"
 	"library/database"
 	"library/models"
+
+	"gorm.io/gorm"
 )
 
 type UserRepository interface {
@@ -16,12 +18,17 @@ type UserRepo struct {
 	Db *gorm.DB
 }
 
-
-func (r *UserRepo) GetUserByEmail (email string) (*models.User, error) {
-	// check if user exists in db
+func (r *UserRepo) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
-	err := database.Db.Where("Email = ?", email).First(&user).Error
-	return &user, err
+	err := database.Db.Where("email = ?", email).First(&user).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil // user does not exist
+	}
+	if err != nil {
+		return nil, err // real DB error
+	}
+	return &user, nil // user exists
 }
 
 func (r *UserRepo) CreateUser(user *models.User) error {
@@ -30,9 +37,8 @@ func (r *UserRepo) CreateUser(user *models.User) error {
 }
 
 func (r *UserRepo) GetUserById(ID string) (*models.User, error) {
-    var user models.User
+	var user models.User
 
-    err := database.Db.Preload("books").Where("id= ?", ID).First(&user).Error
-        return &user, err
+	err := database.Db.Preload("books").Where("id= ?", ID).First(&user).Error
+	return &user, err
 }
-

@@ -13,11 +13,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateJWT(userID uuid.UUID) (string, error) {
+func GenerateJWT(userID uuid.UUID, role string) (string, error) {
 	secret := os.Getenv("JWT_SECRET")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": userID,
 		"exp":    time.Now().Add(24 * time.Hour).Unix(),
+		"role": role,
 	})
 
 	tokenStr, err := token.SignedString([]byte(secret))
