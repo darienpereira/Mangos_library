@@ -4,6 +4,7 @@ import (
 	"errors"
 	"library/models"
 	"library/repository"
+	"library/utils"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -98,7 +99,8 @@ func (s *BookService) ReturnBook(bookID string, claims jwt.MapClaims) error {
 	return nil
 }
 
-func (s *BookService) FindByGenre(pattern string) ([]models.Book, error) {
+func (s *BookService) FindByGenre(genre string) ([]models.Book, error) {
+	pattern := utils.CreatePattern(genre)
 	books, err := s.Repo.FindByGenre(pattern)
 	if err != nil {
 		return nil, err
@@ -106,7 +108,8 @@ func (s *BookService) FindByGenre(pattern string) ([]models.Book, error) {
 	return books, nil
 }
 
-func (s *BookService) FindByTitle(pattern string) ([]models.Book, error) {
+func (s *BookService) FindByTitle(title string) ([]models.Book, error) {
+	pattern := utils.CreatePattern(title)
 	books, err := s.Repo.FindByTitle(pattern)
 	if err != nil {
 		return nil, err
@@ -114,7 +117,8 @@ func (s *BookService) FindByTitle(pattern string) ([]models.Book, error) {
 	return books, nil
 }
 
-func (s *BookService) FindByAuthor(pattern string) ([]models.Book, error) {
+func (s *BookService) FindByAuthor(author string) ([]models.Book, error) {
+	pattern := utils.CreatePattern(author)
 	books, err := s.Repo.FindByAuthor(pattern)
 	if err != nil {
 		return nil, err
@@ -122,8 +126,8 @@ func (s *BookService) FindByAuthor(pattern string) ([]models.Book, error) {
 	return books, nil
 }
 
-func (s *BookService) FindByYear(pattern string) ([]models.Book, error) {
-	books, err := s.Repo.FindByYear(pattern)
+func (s *BookService) FindByYear(year int) ([]models.Book, error) {
+	books, err := s.Repo.FindByYear(year)
 	if err != nil {
 		return nil, err
 	}

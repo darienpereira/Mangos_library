@@ -12,7 +12,7 @@ type BookRepository interface {
 	CreateBook(book *models.Book) error
     DeleteBook(id string) error
 	UpdateBookStock(update *models.Book) error
-	FindByYear(pattern string) ([]models.Book, error)
+	FindByYear(year int) ([]models.Book, error)
 	FindByAuthor(pattern string) ([]models.Book, error)
 	FindByTitle(pattern string) ([]models.Book, error)
 	FindByGenre(pattern string) ([]models.Book, error)
@@ -77,9 +77,9 @@ func (r *BookRepo) FindByAuthor(pattern string) ([]models.Book, error) {
 	return books, nil
 }
 
-func (r *BookRepo) FindByYear(pattern string) ([]models.Book, error) {
+func (r *BookRepo) FindByYear(year int) ([]models.Book, error) {
 	var books []models.Book
-	err := database.Db.Where("CAST(year AS TEXT) LIKE ?", pattern).Find(&books).Error
+	err := database.Db.Where("CAST(year AS TEXT) LIKE ?", year).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
