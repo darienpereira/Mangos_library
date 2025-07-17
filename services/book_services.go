@@ -14,20 +14,23 @@ type BookService struct {
 	Repo repository.BookRepository
 }
 
+func (b *BookService) FindByAuthor(pattern string) (any, any) {
+	panic("unimplemented")
+}
 
-func(b BookService) CreateBook(book models.Book) error{
+func (b BookService) CreateBook(book models.Book) error {
 	return b.Repo.CreateBook(&book)
 }
 
 func (b BookService) UpdateBook(book models.Book) error {
-    return b.Repo.UpdateBook(&book)
+	return b.Repo.UpdateBook(&book)
 }
 
 func (b BookService) DeleteBook(book models.Book) error {
-    return b.Repo.DeleteBook(book.ID)
+	return b.Repo.DeleteBook(book.ID)
 }
 
-func (s *BookService) ListBookByUserID(books *[]models.Book, claims jwt.MapClaims) error{
+func (s *BookService) ListBookByUserID(books *[]models.Book, claims jwt.MapClaims) error {
 	userId, ok := claims["userID"].(string)
 	if !ok {
 		return errors.New("no userid in claims")
@@ -59,7 +62,7 @@ func (s *BookService) BorrowBook(bookID string, claims jwt.MapClaims) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -82,7 +85,6 @@ func (s *BookService) ReturnBook(bookID string, claims jwt.MapClaims) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
-

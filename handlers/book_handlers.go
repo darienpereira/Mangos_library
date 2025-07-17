@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"library/models"
 	"library/services"
 	"log"
@@ -17,57 +18,55 @@ type BookHandler struct {
 	Service *services.BookService
 }
 
+func (b BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) { //method receiver
+	var book models.Book
+	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
 
-func (b BookHandler) CreateBook (w http.ResponseWriter, r *http.Request) { //method receiver 
-    var book models.Book
-    if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-        http.Error(w, "Invalid input", http.StatusBadRequest)
-        return
-    }
-  
-	err:= b.Service.CreateBook(book) //service layer
-    if err != nil {
+	err := b.Service.CreateBook(book) //service layer
+	if err != nil {
 		log.Println(err)
-        http.Error(w, "Failed to create book", http.StatusInternalServerError)
-        return
-    }
+		http.Error(w, "Failed to create book", http.StatusInternalServerError)
+		return
+	}
 
-    json.NewEncoder(w).Encode("book successfully created")
+	json.NewEncoder(w).Encode("book successfully created")
 }
 
 func (b BookHandler) UpdateBook(w http.ResponseWriter, r *http.Request) {
-    var book models.Book
+	var book models.Book
 
-    if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-        http.Error(w, "Invalid input", http.StatusBadRequest)
-        return
-    }
-	err := b.Service.UpdateBook(book)  //service layer
-    if err != nil {
-        log.Println(err)
-        http.Error(w, "Failed to update book", http.StatusInternalServerError)
-        return
-    }
+	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+	err := b.Service.UpdateBook(book) //service layer
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Failed to update book", http.StatusInternalServerError)
+		return
+	}
 
-    json.NewEncoder(w).Encode("book successfully updated")
+	json.NewEncoder(w).Encode("book successfully updated")
 }
 
-
 func (b BookHandler) DeleteBook(w http.ResponseWriter, r *http.Request) {
-    var book models.Book
+	var book models.Book
 
-    if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-        http.Error(w, "Invalid input", http.StatusBadRequest)
-        return
-    }
+	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
 	err := b.Service.DeleteBook(book)
-    if err != nil {
-        log.Println(err)
-        http.Error(w, "Failed to delete book", http.StatusInternalServerError)
-        return
-    }
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Failed to delete book", http.StatusInternalServerError)
+		return
+	}
 
-    json.NewEncoder(w).Encode("book successfully deleted")
+	json.NewEncoder(w).Encode("book successfully deleted")
 }
 
 func (h *BookHandler) ListUserBooks(w http.ResponseWriter, r *http.Request) {
@@ -124,6 +123,58 @@ func (h *BookHandler) ReturnBook(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("book has been returned")
 }
+func CreatePattern(req string) string {
+	return fmt.Sprintf("%%%s%%", req)
+}
+
+func (h *BookHandler) FindByGenre(w http.ResponseWriter, r *http.Request) {
+	genre := r.URL.Query().Get("genre")
+	pattern := CreatePattern(genre)
+
+	books, err := h.Service.FindByGenre(pattern)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(books)
+}
+func (h *BookHandler) FindByTitle(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Query().Get("title")
+	pattern := CreatePattern(title)
+
+	books, err := h.Service.FindByTitle(pattern)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(books)
+}
+func (h *BookHandler) FindByAuthor(w http.ResponseWriter, r *http.Request) {
+	author := r.URL.Query().Get("author")
+	pattern := CreatePattern(author)
+
+	books, err := h.Service.FindByAuthor(pattern)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(books)
+}
+func (h *BookHandler) FindByYear(w http.ResponseWriter, r *http.Request) {
+	year := r.URL.Query().Get("year")
+	pattern := CreatePattern(year)
+
+	books, err := h.Service.FindByYear(pattern)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(books)
+}
 
 /*
 Group 1
@@ -134,7 +185,7 @@ chechout book - user
 check in book - user
 
 Group 2
-create book - admin    
+create book - admin
 delete book - admin
 update book - admin
 
