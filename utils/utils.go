@@ -35,7 +35,7 @@ func GetPort() string {
 	return port
 }
 
-func CreatePattern (req string) string {
+func CreatePattern(req string) string {
 	pattern := fmt.Sprintf("%%%s%%", req)
 	return pattern
 }
