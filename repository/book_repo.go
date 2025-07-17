@@ -48,3 +48,39 @@ func (r *BookRepo) UpdateBookStock(update *models.Book) error {
 	return err
 }
 
+func (r *BookRepo) FindByGenre(pattern string) ([]models.Book, error) {
+	var books []models.Book
+	err := r.DB.Where("genre LIKE ?", pattern).Find(&books).Error
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (r *BookRepo) FindByTitle(pattern string) ([]models.Book, error) {
+	var books []models.Book
+	err := r.DB.Where("title LIKE ?", pattern).Find(&books).Error
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (r *BookRepo) FindByAuthor(pattern string) ([]models.Book, error) {
+	var books []models.Book
+	err := r.DB.Where("author LIKE ?", pattern).Find(&books).Error
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (r *BookRepo) FindByYear(pattern string) ([]models.Book, error) {
+	var books []models.Book
+	err := r.DB.Where("CAST(year AS TEXT) LIKE ?", pattern).Find(&books).Error
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
