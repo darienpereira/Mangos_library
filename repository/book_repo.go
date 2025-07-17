@@ -30,7 +30,7 @@ func (r *BookRepo) UpdateBook(book *models.Book) error {
 }
 
 func (r *BookRepo) DeleteBook(id string) error {
-    return database.Db.Delete(&models.Book{}, id).Error
+    return database.Db.Delete(&models.Book{}, "id = ?", id).Error
 }
 
 func (r *BookRepo) GetBooksByUser(id string) (*[]models.Book, error) {
