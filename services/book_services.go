@@ -91,3 +91,35 @@ func (s *BookService) ReturnBook(bookID string, claims jwt.MapClaims) error {
 
 	return nil
 }
+
+func (s *BookService) FindByGenre(pattern string) ([]models.Book, error) {
+	books, err := s.Repo.FindByGenre(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (s *BookService) FindByTitle(pattern string) ([]models.Book, error) {
+	books, err := s.Repo.FindByTitle(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (s *BookService) FindByAuthor(pattern string) ([]models.Book, error) {
+	books, err := s.Repo.FindByAuthor(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (s *BookService) FindByYear(pattern string) ([]models.Book, error) {
+	books, err := s.Repo.FindByYear(pattern)
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
