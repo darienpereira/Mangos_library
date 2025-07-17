@@ -14,6 +14,10 @@ type BookRepository interface {
 	CreateBook(book *models.Book) error
     DeleteBook(id uuid.UUID) error
 	UpdateBookStock(update *models.Book) error
+	FindByYear(pattern string) ([]models.Book, error)
+	FindByAuthor(pattern string) ([]models.Book, error)
+	FindByTitle(pattern string) ([]models.Book, error)
+	FindByGenre(pattern string) ([]models.Book, error)
 }
 
 type BookRepo struct {
@@ -50,7 +54,7 @@ func (r *BookRepo) UpdateBookStock(update *models.Book) error {
 
 func (r *BookRepo) FindByGenre(pattern string) ([]models.Book, error) {
 	var books []models.Book
-	err := r.DB.Where("genre LIKE ?", pattern).Find(&books).Error
+	err := database.Db.Where("genre LIKE ?", pattern).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +63,7 @@ func (r *BookRepo) FindByGenre(pattern string) ([]models.Book, error) {
 
 func (r *BookRepo) FindByTitle(pattern string) ([]models.Book, error) {
 	var books []models.Book
-	err := r.DB.Where("title LIKE ?", pattern).Find(&books).Error
+	err := database.Db.Where("title LIKE ?", pattern).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +72,7 @@ func (r *BookRepo) FindByTitle(pattern string) ([]models.Book, error) {
 
 func (r *BookRepo) FindByAuthor(pattern string) ([]models.Book, error) {
 	var books []models.Book
-	err := r.DB.Where("author LIKE ?", pattern).Find(&books).Error
+	err := database.Db.Where("author LIKE ?", pattern).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +81,7 @@ func (r *BookRepo) FindByAuthor(pattern string) ([]models.Book, error) {
 
 func (r *BookRepo) FindByYear(pattern string) ([]models.Book, error) {
 	var books []models.Book
-	err := r.DB.Where("CAST(year AS TEXT) LIKE ?", pattern).Find(&books).Error
+	err := database.Db.Where("CAST(year AS TEXT) LIKE ?", pattern).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}

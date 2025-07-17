@@ -147,7 +147,7 @@ func (h *BookHandler) FindByGenre(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	books, err := h.Service.FindByGenre(pattern)
+	books, err = h.Service.FindByGenre(pattern)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -174,7 +174,7 @@ func (h *BookHandler) FindByTitle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	books, err := h.Service.FindByTitle(pattern)
+	books, err = h.Service.FindByTitle(pattern)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
