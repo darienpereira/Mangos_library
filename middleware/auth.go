@@ -65,3 +65,26 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
+
+func AuthAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			http.Error(w, "missing token", http.StatusUnauthorized)
+			return
+		}
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+		claims, err := VerifyJWT(tokenString)
+		if err != nil {
+			http.Error(w, "invalid token", http.StatusUnauthorized)
+			return
+		}
+		if claims["role"].(string) != "admin" {
+			http.Error(w, "not an admin", http.StatusUnauthorized)
+			return
+		}
+		ctx := context.WithValue(r.Context(), utils.UserContextKey, claims)
+
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
