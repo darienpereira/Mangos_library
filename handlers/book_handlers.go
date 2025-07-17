@@ -26,13 +26,7 @@ func (b BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claims, ok := r.Context().Value(utils.UserContextKey).(jwt.MapClaims)
-	if !ok {
-		http.Error(w, "no claims in context", http.StatusInternalServerError)
-		return
-	}
-
-	err := b.Service.CreateBook(book, claims) //service layer
+	err := b.Service.CreateBook(book) //service layer
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

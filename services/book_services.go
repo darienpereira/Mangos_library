@@ -18,11 +18,7 @@ func (b *BookService) FindByAuthor(pattern string) (any, any) {
 	panic("unimplemented")
 }
 
-func (b BookService) CreateBook(book models.Book, claims jwt.MapClaims) error {
-	role := claims["role"].(string)
-	if role != "admin" {
-		return errors.New("unauthorised")
-	}
+func (b BookService) CreateBook(book models.Book) error {
 	book.OnShelf = true
 	book.ReturnDate = nil
 	book.UserID = nil
