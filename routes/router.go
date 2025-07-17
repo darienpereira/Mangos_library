@@ -25,3 +25,4 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 
 	return r
 }
+
