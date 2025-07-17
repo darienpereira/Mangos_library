@@ -137,8 +137,7 @@ func (h *BookHandler) FindByGenre(w http.ResponseWriter, r *http.Request) {
 
 	pattern := CreatePattern(input.Value)
 
-	var books []models.Book
-	err := database.DB.Where("genre LIKE ?", pattern).Find(&books).Error
+	books, err := h.Service.FindByGenre(pattern) 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -147,6 +146,7 @@ func (h *BookHandler) FindByGenre(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(books)
 }
+
 
 func (h *BookHandler) FindByTitle(w http.ResponseWriter, r *http.Request) {
 	var input models.BookSearch
@@ -158,15 +158,16 @@ func (h *BookHandler) FindByTitle(w http.ResponseWriter, r *http.Request) {
 
 	pattern := CreatePattern(input.Value)
 
-	var books []models.Book
-	err := database.DB.Where("title LIKE ?", pattern).Find(&books).Error
+	books, err := h.Service.FindByTitle(pattern) 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(books)
 }
+
 func (h *BookHandler) FindByAuthor(w http.ResponseWriter, r *http.Request) {
 	var input models.BookSearch
 
@@ -177,17 +178,14 @@ func (h *BookHandler) FindByAuthor(w http.ResponseWriter, r *http.Request) {
 
 	pattern := CreatePattern(input.Value)
 
-	var books []models.Book
-	err := database.DB.Where("author LIKE ?", pattern).Find(&books).Error
-	if err != nil {
+	books, err := h.Service.FindByAuthor(pattern) 
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK) 
-	json.NewEncoder(w).Encode(books) 
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(books)
 }
-
 func (h *BookHandler) FindByYear(w http.ResponseWriter, r *http.Request) {
 	var input models.BookSearch
 
@@ -198,16 +196,18 @@ func (h *BookHandler) FindByYear(w http.ResponseWriter, r *http.Request) {
 
 	pattern := CreatePattern(input.Value)
 
-	var books []models.Book
-	err := database.DB.Where("year LIKE ?", pattern).Find(&books).Error
+	books, err := h.Service.FindByYear(pattern) // ✅ Call the service, not database directly
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK) 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(books)
 }
+
+
+
 
 
 
