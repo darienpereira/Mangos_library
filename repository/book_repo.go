@@ -16,6 +16,7 @@ type BookRepository interface {
 	FindByAuthor(pattern string) ([]models.Book, error)
 	FindByTitle(pattern string) ([]models.Book, error)
 	FindByGenre(pattern string) ([]models.Book, error)
+	GetAllBooks()([]models.Book, error)
 }
 
 type BookRepo struct {
@@ -86,3 +87,9 @@ func (r *BookRepo) FindByYear(year int) ([]models.Book, error) {
 	return books, nil
 }
 
+//repo layer
+func (r *BookRepo) GetAllBooks()([]models.Book, error) {
+   var books []models.Book
+   err := database.Db.Find(&books).Error
+   return books, err
+}
