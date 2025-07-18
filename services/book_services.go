@@ -133,3 +133,21 @@ func (s *BookService) FindByYear(year int) ([]models.Book, error) {
 	}
 	return books, nil
 }
+
+//service layer
+func (s *BookService) GetBook(id string) (*models.Book, error) {
+    book, err:=s.Repo.GetBookByID(id)
+    if err != nil {
+        return &models.Book{}, err
+    }
+    return book, nil
+}
+
+//service layer
+func (s *BookService) ListAllBooks() ([]models.Book, error) {
+   book, err := s.Repo.GetAllBooks()
+   if err != nil {
+       return nil, err
+   }
+   return book, nil
+}

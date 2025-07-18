@@ -21,6 +21,9 @@ func SetUpRouter(userHandler *handlers.UserHandler, bookHandler *handlers.BookHa
 	p.HandleFunc("/me", userHandler.GetUserInfo).Methods("GET") 
 	p.HandleFunc("/mybooks", bookHandler.ListUserBooks).Methods("GET")
 
+	p.HandleFunc("/books", bookHandler.ListAllBooks).Methods("GET")
+	p.HandleFunc("/books/{id}",bookHandler.GetBook).Methods("GET")
+
 	p.HandleFunc("/search/genre", bookHandler.FindByGenre).Methods("GET")
 	p.HandleFunc("/search/title", bookHandler.FindByTitle).Methods("GET")
 	p.HandleFunc("/search/author", bookHandler.FindByAuthor).Methods("GET")

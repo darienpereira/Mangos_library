@@ -195,6 +195,31 @@ func (h *BookHandler) FindByYear(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(books)
 }
 
+// handler layer
+func (h *BookHandler) GetBook(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    id := vars["id"]
+    book, err:= h.Service.GetBook(id)
+    if err != nil {
+        http.Error(w,err.Error(),http.StatusInternalServerError)
+        return
+    }
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(book)
+}
+
+//handler layer
+func (h *BookHandler) ListAllBooks(w http.ResponseWriter, r *http.Request) {
+  books, err:= h.Service.ListAllBooks()
+  if err != nil {
+   http.Error(w,err.Error(),http.StatusInternalServerError)
+   return
+  }
+  w.WriteHeader(http.StatusOK)
+  json.NewEncoder(w).Encode(books)
+}
+
+
 /*
 Group 1
 list All Books - user
