@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -27,7 +27,7 @@ func OpenDb() {
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PORT"),
 	)
-
+	var err error
 	Db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to open database", err)
