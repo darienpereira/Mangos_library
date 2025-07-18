@@ -39,6 +39,6 @@ func (r *UserRepo) CreateUser(user *models.User) error {
 func (r *UserRepo) GetUserById(ID string) (*models.User, error) {
 	var user models.User
 
-	err := database.Db.Preload("books").Where("id= ?", ID).First(&user).Error
+	err := database.Db.Preload("Books").Where("id= ?", ID).First(&user).Error
 	return &user, err
 }
