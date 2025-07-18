@@ -40,16 +40,16 @@ func (s *BookService) DeleteBook(id string) error {
 	return s.Repo.DeleteBook(id)
 }
 
-func (s *BookService) ListBookByUserID(books *[]models.Book, claims jwt.MapClaims) error {
+func (s *BookService) ListBookByUserID(claims jwt.MapClaims) ([]models.Book, error) {
 	userId, ok := claims["userID"].(string)
 	if !ok {
-		return errors.New("no userid in claims")
+		return nil, errors.New("no userid in claims")
 	}
 	books, err := s.Repo.GetBooksByUser(userId)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return books, nil
 }
 
 func (s *BookService) BorrowBook(bookID string, claims jwt.MapClaims) error {

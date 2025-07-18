@@ -76,8 +76,7 @@ func (h *BookHandler) ListUserBooks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no claims in context", http.StatusInternalServerError)
 		return
 	}
-	var myBooks []models.Book
-	err := h.Service.ListBookByUserID(&myBooks, claims)
+	myBooks, err := h.Service.ListBookByUserID(claims)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
