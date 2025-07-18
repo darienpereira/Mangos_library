@@ -14,10 +14,10 @@ import (
 var Db *gorm.DB
 
 func OpenDb() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("failed to load .env file", err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("failed to load .env file", err)
+	// }
 	// connStr := "user=postgres password=password dbname=library port=5432 sslmode=disable"
 	connStr := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
