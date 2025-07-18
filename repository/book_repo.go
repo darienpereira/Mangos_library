@@ -80,7 +80,7 @@ func (r *BookRepo) FindByAuthor(pattern string) ([]models.Book, error) {
 
 func (r *BookRepo) FindByYear(year int) ([]models.Book, error) {
 	var books []models.Book
-	err := database.Db.Where("CAST(year AS TEXT) LIKE ?", year).Find(&books).Error
+	err := database.Db.Where("year = ?", year).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
