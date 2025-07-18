@@ -6,7 +6,7 @@ import (
 )
 
 type BookRepository interface {
-	GetBooksByUser(id string) (*[]models.Book, error)
+	GetBooksByUser(id string) ([]models.Book, error)
 	GetBookByID(id string) (*models.Book, error)
 	UpdateBook(update *models.Book) error
 	CreateBook(book *models.Book) error
@@ -33,10 +33,10 @@ func (r *BookRepo) DeleteBook(id string) error {
     return database.Db.Delete(&models.Book{}, "id = ?", id).Error
 }
 
-func (r *BookRepo) GetBooksByUser(id string) (*[]models.Book, error) {
+func (r *BookRepo) GetBooksByUser(id string) ([]models.Book, error) {
 	var user models.User
-	err := database.Db.Where("ID = ?", id).First(&user).Error
-	return &user.Books, err
+	err := database.Db.Preload("Books").Where("ID = ?", id).First(&user).Error
+	return user.Books, err
 }
 
 func (r *BookRepo) GetBookByID(id string) (*models.Book, error) {
